@@ -2,7 +2,8 @@ package ishell
 
 import (
 	"strings"
-
+        "os"
+	"io/ioutil"
 	"github.com/flynn-archive/go-shlex"
 )
 
@@ -47,7 +48,11 @@ func (ic iCompleter) Do(line []rune, pos int) (newLine [][]rune, length int) {
 func (ic iCompleter) getWords(w []string) (s []string) {
 	cmd, args := ic.cmd.FindCmd(w)
 	if cmd == nil {
-		cmd, args = ic.cmd, w
+		if len(args)==0{
+			cmd, args = ic.cmd, w
+		}else{
+			return listFileNames()
+		}
 	}
 	if cmd.Completer != nil {
 		return cmd.Completer(args)
@@ -56,4 +61,13 @@ func (ic iCompleter) getWords(w []string) (s []string) {
 		s = append(s, k)
 	}
 	return
+}
+func listFileNames()[]string{
+	var names []string
+	dir,_ := os.Getwd()
+	files, _ := ioutil.ReadDir(dir)
+	for _,file := range files {
+		names = append(names, file.Name())
+	}
+	return names
 }
