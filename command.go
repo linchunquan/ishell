@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"sort"
 	"text/tabwriter"
+	"strings"
 )
 
 // Cmd is a shell command handler.
@@ -85,12 +86,21 @@ func (c Cmd) HelpText() string {
 		p("Commands:")
 		w := tabwriter.NewWriter(&b, 0, 4, 2, ' ', 0)
 		for _, child := range c.Children() {
-			fmt.Fprintf(w, "\t%s\t\t\t%s\n", child.Name, child.Help)
+			//fmt.Fprintf(w, "\t%s\t\t\t%s\n", child.Name, child.Help)
+			fmt.Fprintf(w, "\t%s\t\t\t%s\n", getCommanNames(child), child.Help)
 		}
 		w.Flush()
 		p()
 	}
 	return b.String()
+}
+
+func getCommanNames(c *Cmd)string{
+	commands := []string{c.Name}
+	if len(c.Aliases)>0{
+		commands = append(commands, c.Aliases...)
+	}
+	return strings.Join(commands,", ")
 }
 
 // findChildCmd returns the subcommand with matching name or alias.
