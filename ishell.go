@@ -184,6 +184,8 @@ shell:
 		}
 		if err != nil {
 			s.Println("Error:", err)
+		}else{
+			s.Println()
 		}
 	}
 }
