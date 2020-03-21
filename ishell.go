@@ -249,7 +249,14 @@ func (s *Shell) handleCommand(str []string) (bool, error) {
 		return true, nil
 	}
 	c := newContext(s, cmd, args)
-	cmd.Func(c)
+
+	var err error
+	if cmd.PreFunc != nil {
+		err = cmd.PreFunc(c)
+	}
+	if err == nil {
+		cmd.Func(c)
+	}
 	return true, c.err
 }
 
