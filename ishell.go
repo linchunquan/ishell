@@ -251,8 +251,13 @@ func (s *Shell) handleCommand(str []string) (bool, error) {
 	c := newContext(s, cmd, args)
 
 	var err error
-	if cmd.PreFunc != nil {
-		err = cmd.PreFunc(c)
+	if cmd.PreFunc != nil && len(cmd.PreFunc) > 0 {
+		for _, fn := range cmd.PreFunc {
+			err = fn(c)
+			if err != nil {
+				break
+			}
+		}
 	}
 	if err == nil {
 		cmd.Func(c)

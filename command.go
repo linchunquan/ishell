@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"fmt"
 	"sort"
-	"text/tabwriter"
 	"strings"
+	"text/tabwriter"
 )
 
 // Cmd is a shell command handler.
@@ -15,7 +15,7 @@ type Cmd struct {
 	// Command name aliases.
 	Aliases []string
 	// Function to execute before the business command.
-	PreFunc func(c *Context) error
+	PreFunc []func(c *Context) error
 	// Function to execute for the command.
 	Func func(c *Context)
 	// One liner help message for the command.
